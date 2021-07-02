@@ -28,7 +28,7 @@ class MainWindow(tcp_logic.TcpLogic, udp_logic.UdpLogic, ):
         self.pushButton_get_ip.clicked.connect(self.click_get_ip)
         self.pushButton_clear.clicked.connect(self.click_clear)
         self.pushButton_send.clicked.connect(self.send)
-        self.pushButton_dir.clicked.connect(self.click_dir)
+        #self.pushButton_dir.clicked.connect(self.click_dir)
         self.pushButton_exit.clicked.connect(self.close)
         self.pushButton_else.clicked.connect(self.another_window)
 
@@ -103,10 +103,6 @@ class MainWindow(tcp_logic.TcpLogic, udp_logic.UdpLogic, ):
         # 清空接收区屏幕
         self.textBrowser_recv.clear()
 
-    def click_dir(self):
-        # WEB服务端功能中选择路径
-        self.web_get_dir()
-
     def close_all(self):
         """
         功能函数，关闭网络连接的方法
@@ -117,8 +113,6 @@ class MainWindow(tcp_logic.TcpLogic, udp_logic.UdpLogic, ):
             self.tcp_close()
         if self.comboBox_tcp.currentIndex() == 2 or self.comboBox_tcp.currentIndex() == 3:
             self.udp_close()
-        if self.comboBox_tcp.currentIndex() == 4:
-            self.web_close()
         self.reset()
 
     def reset(self):
@@ -137,10 +131,10 @@ class MainWindow(tcp_logic.TcpLogic, udp_logic.UdpLogic, ):
         :return:
         """
         # 弹出一个消息框，提示开启了一个新的窗口
-        QtWidgets.QMessageBox.warning(self,
-                                      'TCP/UDP网络测试助手',
-                                      "已经开启了新的TCP/UDP网络测试助手！",
-                                      QtWidgets.QMessageBox.Yes)
+        # QtWidgets.QMessageBox.warning(self,
+        #                               'TCP/UDP网络测试助手',
+        #                               "已经开启了新的TCP/UDP网络测试助手！",
+        #                               QtWidgets.QMessageBox.Yes)
         # 计数，开启了几个窗口
         self.num = self.num + 1
         # 开启新的窗口

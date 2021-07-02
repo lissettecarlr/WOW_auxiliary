@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets,Qt
 from PyQt5.QtWidgets import QApplication, QDialog, QHBoxLayout, QVBoxLayout
 import sys
 
@@ -15,6 +15,8 @@ class ToolsUi(QDialog):
         super(ToolsUi, self).__init__()
         self.num = num
         self._translate = QtCore.QCoreApplication.translate
+
+        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
 
         self.setObjectName("TCP-UDP")
         self.resize(640, 480)
