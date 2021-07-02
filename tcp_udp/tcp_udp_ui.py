@@ -17,6 +17,8 @@ class ToolsUi(QDialog):
         self._translate = QtCore.QCoreApplication.translate
 
         self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
+        self.setWindowOpacity(0.98) 
+        # self.setWindowIcon(QIcon('Amg.jpg'))
 
         self.setObjectName("TCP-UDP")
         self.resize(640, 480)
@@ -104,7 +106,9 @@ class ToolsUi(QDialog):
         self.lineEdit_ip_send.hide()
         self.label_dir.setWordWrap(True)  # 让label自动换行
         self.pushButton_unlink.setEnabled(False)
-        self.textBrowser_recv.insertPlainText("这是窗口-%s\n" % self.num)
+        
+        self.label_send.setStyleSheet('''QLabel{color:black;font-size:40px;font-family:Roman times;}''')
+        self.label_rev.setStyleSheet('''QLabel{color:black;font-size:40px;font-family:Roman times;}''')
 
         # 调用布局方法和控件显示文字的方法
         self.layout_ui()

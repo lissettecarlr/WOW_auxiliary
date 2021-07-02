@@ -137,6 +137,8 @@ class MainWindow(tcp_logic.TcpLogic, udp_logic.UdpLogic, ):
         #                               QtWidgets.QMessageBox.Yes)
         # 计数，开启了几个窗口
         self.num = self.num + 1
+        self.pushButton_else.setEnabled(False)
+        self.pushButton_else.setText("已克隆")
         # 开启新的窗口
         self.another = MainWindow(self.num)
         self.another.show()

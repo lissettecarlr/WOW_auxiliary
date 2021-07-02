@@ -69,12 +69,12 @@ class TcpLogic(tcp_udp_ui.ToolsUi):
                         # 以字符串方式输出信息
                         if self.comboBox_data.currentIndex() == 0:
                             msg = recv_msg.decode('utf-8')
-                            msg = 'IP:{}port:{}:\n{}\n'.format(address[0], address[1], msg)  
-                        # 以HEX输出    
+                            msg = 'IP:{}\nport:{}\n{}\n'.format(address[0], address[1], msg)
+                      # 以HEX输出    
                         if self.comboBox_data.currentIndex() == 1:    
                             msgb= binascii.hexlify(recv_msg)
                             msg = msgb.decode('utf-8') 
-                        msg = 'IP:{}port:{}[hex]:\n{}\n'.format(address[0], address[1], msg)
+                            msg = 'IP:{}\nport:{}\n[hex]:{}\n'.format(address[0], address[1], msg)
                         self.signal_write_msg.emit(msg)
                     else:
                         client.close()
@@ -115,13 +115,13 @@ class TcpLogic(tcp_udp_ui.ToolsUi):
             if recv_msg:
                 # 以字符串方式输出信息
                 if self.comboBox_data.currentIndex() == 0:
-                    msg = recv_msg.decode('utf-8')
-                    msg = 'IP:{}port:{}:\n{}\n'.format(address[0], address[1], msg)  
+                    msg = recv_msg.decode('utf-8') 
+                    msg = 'IP:{}port:{}\n{}\n'.format(address[0], address[1], msg)
                 # 以HEX输出    
                 if self.comboBox_data.currentIndex() == 1:    
                     msgb= binascii.hexlify(recv_msg)
                     msg = msgb.decode('utf-8') 
-                msg = 'IP:{}port:{}[hex]:\n{}\n'.format(address[0], address[1], msg)
+                    msg = 'IP:{}port:{}\n[hex]:{}\n'.format(address[0], address[1], msg)
                 self.signal_write_msg.emit(msg)
             else:
                 self.tcp_socket.close()
