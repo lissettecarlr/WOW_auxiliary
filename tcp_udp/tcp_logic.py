@@ -141,8 +141,6 @@ class TcpLogic(tcp_udp_ui.ToolsUi):
         else:
             try:
                 # 根据选框不同，以不同方式读取数据
-                
-                
                 if self.comboBox_sd.currentIndex() == 0:
                     send_msg = (str(self.textEdit_send.toPlainText())).encode('utf-8')
                 if self.comboBox_sd.currentIndex() == 1:
