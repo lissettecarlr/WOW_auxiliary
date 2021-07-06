@@ -44,8 +44,9 @@ def main():
     if tgtIP:   # 输入单个ip地址时的操作
         for p in tgtPorts:
             port = int(p)
-            t = Thread(target=scan,args=(tgtIP,port))
-            t.start()
+            scan(tgtIP,port)
+            # t = Thread(target=scan,args=(tgtIP,port))
+            # t.start()
 
     if tgtNetwork:  # 输入整个网段时的操作
         prefix = tgtNetwork.split(".")[0] + "." + tgtNetwork.split(".")[1] + "." + tgtNetwork.split(".")[2] + "."   # 将用户输入的网段提取提取前三位当作前缀
@@ -73,5 +74,4 @@ def main():
 
 
 if __name__ == '__main__':
-    print("start")
     main()
