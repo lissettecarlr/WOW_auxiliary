@@ -1,6 +1,0 @@
-默认图标1920*1080
-当窗体不是该比例则需要重新截图，其中
-bag.PNG是作为是否在游戏中的判断图片
-key_login.PNG是作为是否处于角色选择画面的判断图片
-key_return_login.PNG是在小退是的点击按钮图片
-buf_dragon.PNG是判断是否具备龙头BUF的图片
