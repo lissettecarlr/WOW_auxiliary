@@ -22,7 +22,7 @@
 
 from scapy.all import *
 def port_scan(port):
-    answer= sr1(IP(dst="72.14.207.99") / (TCP(dport=int(port), flags="S")),timeout=0.5,verbose=0)
+    answer= sr1(IP(dst="36.137.134.5") / (TCP(dport=int(port), flags="S")),timeout=0.5,verbose=0)
     if answer == None:
         # print(port,"not ack")
         pass
@@ -32,5 +32,5 @@ def port_scan(port):
         if answer[TCP].flags == 20:
             print(port,"is Closed")
 
-for i in range(81):        
+for i in range(88):        
     port_scan(i)
