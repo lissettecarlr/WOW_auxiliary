@@ -75,6 +75,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "蓝牙工具"))
+        #禁止改变窗体大小
+        MainWindow.setFixedSize(MainWindow.width(), MainWindow.height());   
+    
         self.lineEdit_3.setText(_translate("MainWindow", "MAC地址"))
         self.lineEdit_2.setText(_translate("MainWindow", "UUID-1"))
         self.lineEdit.setText(_translate("MainWindow", "UUID-2"))
