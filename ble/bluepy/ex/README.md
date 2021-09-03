@@ -76,6 +76,7 @@ Device f9:ee:30:21:f6:6d (random), RSSI=-31 dB
 #####getServices.py.py
 ----------------------
  Displays the device's Characteristics-handles,-UUIDs and properties by running :
+ 显示特征 UUID 和属性
 * python getServices.py xx:xx:xx:xx:xx:xx 
    *   Where the xx:xx:xx:xx:xx:xx is the MAC address that could be found by running the blesca.py 
       * The MAC address for my device is f9:ee:30:21:f6:6d   :smiley: 
