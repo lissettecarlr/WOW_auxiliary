@@ -38,6 +38,7 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         
         self.textBrowser.insertPlainText("点击了连接"+"\n\n")
         self.adapter = pygatt.GATTToolBackend(search_window_size=2048)
+        self.adapter.start()
         self.device = self.adapter.connect("54:B7:E5:79:F4:49")
         self.device.subscribe("0000fff1-0000-1000-8000-00805f9b34fb",
                          callback=self.dataCallback,
