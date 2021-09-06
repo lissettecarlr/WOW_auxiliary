@@ -86,3 +86,8 @@ class Ui_MainWindow(object):
         self.lineEdit_5.setText(_translate("MainWindow", "UUID"))
         self.lineEdit_4.setText(_translate("MainWindow", "HEX内容"))
         self.pushButton_3.setText(_translate("MainWindow", "发送"))
+        
+    def setShow(self,str):
+        self.textBrowser.insertPlainText(str + "\n")
+        self.textBrowser.moveCursor(self.textBrowser.textCursor().End)
+
