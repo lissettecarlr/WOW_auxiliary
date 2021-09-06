@@ -1,6 +1,6 @@
 # 窗体相关
-from logging import log
 import sys
+from typing import Type
 import uuid
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox,QMainWindow
@@ -8,12 +8,10 @@ from PyQt5.QtCore import QTimer,QRegExp,QThread, pyqtSignal
 from PyQt5.QtGui import QKeyEvent, QKeySequence, QRegExpValidator
 from ble_pygatt_ui import Ui_MainWindow
 import pygatt
-
-import threading
-
 import queue
 from loguru import logger
 import time
+import binascii
 
 class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
     def __init__(self):
@@ -41,23 +39,33 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.disconnect)
         self.pushButton_3.clicked.connect(self.send)
 
-        #限制输入
+        #限制输入 MAC
         reg = QRegExp("([a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2})")
         LE1Validator = QRegExpValidator(self)
         LE1Validator.setRegExp(reg)
         self.lineEdit_3.setValidator(LE1Validator)
 
+        # UUID
         reg2 = QRegExp("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
         LE1Validator2 = QRegExpValidator(self)
         LE1Validator2.setRegExp(reg2)        
         self.lineEdit_2.setValidator(LE1Validator2)
         self.lineEdit.setValidator(LE1Validator2)
-        self.lineEdit_4.setValidator(LE1Validator2)
+
         self.lineEdit_5.setValidator(LE1Validator2)
 
+        # 设置默认值
         self.lineEdit_3.setText(self.defaultMac)
         self.lineEdit_2.setText(self.defaultUUID)
         self.lineEdit.setText(self.defaultUUID_2)
+
+        self.lineEdit_5.setText('0000f102-0000-1000-8000-00805f9b34fb')
+        self.lineEdit_4.setText('A401FF') 
+        # HEX
+        reg3 = QRegExp("^[0-9A-Fa-f]+$")
+        LE1Validator3 = QRegExpValidator(self)
+        LE1Validator3.setRegExp(reg3) 
+        self.lineEdit_4.setValidator(LE1Validator3)
 
         self.loop.start()
         logger.info("init ok")
@@ -88,7 +96,6 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
             temp = q.get()
         logger.info("clear queue over")
         
-
         #打开更新循环
         self.loop.rcvStart()
 
@@ -98,10 +105,31 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.textBrowser.moveCursor(win.textBrowser.textCursor().End) 
 
     def send(self):
+        sendUUID = self.lineEdit_5.text()
+        sendStr = self.lineEdit_4.text()
+        # 字符串转hex
+        # data = sendStr.encode("utf-8")
+        # logger.info(f"send:{type(sendUUID)},{sendUUID}-{type(data)}{sendStr}")
+        # self.device.char_write(sendUUID,)
+        # test = bytearray(sendStr,'utf-8')
+
+        # sendbin = sendStr.encode("utf-8")
+        # test = binascii.unhexlify(sendbin)
+        # test2 = bytearray([0XA4,0X01,0XFF])
+        # test3 = bytearray(test)
+        # logger.info(f"{test}")
+        # logger.info(f"{test2}")
+        # logger.info(f"{test3}")
+        # logger.info(f"bytearray1:{bytearray(sendStr,'utf-8')}")
+        # logger.info(f"bytearray2:{bytearray([0XA4,0X01,0XFF])}")
+
+        self.device.char_write(sendUUID,bytearray(binascii.unhexlify(sendStr.encode("utf-8"))))
+        
         self.textBrowser.insertPlainText("点击了发送"+"\n\n")
         if(self.adapter == None):
             self.textBrowser.insertPlainText("未建立连接"+"\n\n")
             return
+
     # 将数据存入缓冲区
     def setTextBrowser(self,str):
         q.put(str)
@@ -136,39 +164,7 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         sys.exit(app.exec_())        
 
 
-# 用于从缓冲区取出接受到的蓝牙数据，发送给UI进行显示
-# class ble_show_loop(threading.Thread):
-#     def __init__(self):
-#         threading.Thread.__init__(self)
-#         self.closeFlag = False
-#         self.alive =True
-#     def run(self):
-#         logger.info("loop start")
-#         while self.alive:
-#             #如果队列中有数据，则取出输出到显示区域
-#             if(self.closeFlag==True and q.qsize()>0):
-#                 str = q.get()#取出
-#                 logger.info("queue output")
-#                 show.insertPlainText(str + "\n")
-#                 show.moveCursor(win.textBrowser.textCursor().End)
-#             else:
-#                 time.sleep(0.1)
-#         logger.info("loop end")
-
-#     def closeLoop(self):
-#         self.alive = False
-
-#     def rcvStart(self):
-#         #清空队列
-#         logger.info("clear queue")
-#         while(q.empty() == False):
-#             temp = q.get()
-#         logger.info("clear queue over")
-#         self.closeFlag = True
-
-#     def rcvStop(self):
-#         self.closeFlag = False
-
+# 用于UI显示的线程
 class showLoop(QThread):
     # 自定义信号对象。参数str就代表这个信号可以传一个字符串
     trigger = pyqtSignal(str)
@@ -192,7 +188,7 @@ class showLoop(QThread):
 
     def rcvStop(self):
         self.closeFlag = False
-        
+
     def closeLoop(self):
         self.alive = False        
 

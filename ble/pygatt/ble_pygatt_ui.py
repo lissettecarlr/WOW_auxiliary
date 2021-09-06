@@ -78,13 +78,17 @@ class Ui_MainWindow(object):
         #禁止改变窗体大小
         MainWindow.setFixedSize(MainWindow.width(), MainWindow.height());   
     
+        
+
         self.lineEdit_3.setText(_translate("MainWindow", "MAC地址"))
         self.lineEdit_2.setText(_translate("MainWindow", "UUID-1"))
         self.lineEdit.setText(_translate("MainWindow", "UUID-2"))
         self.pushButton.setText(_translate("MainWindow", "连接"))
         self.pushButton_2.setText(_translate("MainWindow", "断开"))
-        self.lineEdit_5.setText(_translate("MainWindow", "UUID"))
-        self.lineEdit_4.setText(_translate("MainWindow", "HEX内容"))
+        #self.lineEdit_5.setText(_translate("MainWindow", "UUID"))
+        self.lineEdit_5.setPlaceholderText("发送通道UUID") 
+        # self.lineEdit_4.setText(_translate("MainWindow", "HEX内容"))
+        self.lineEdit_4.setPlaceholderText("发送的内容，进入HEX") 
         self.pushButton_3.setText(_translate("MainWindow", "发送"))
         
     def setShow(self,str):

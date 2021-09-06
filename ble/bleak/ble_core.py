@@ -30,7 +30,7 @@ async def run_ble_client(address):
         await client.stop_notify(CMD_UUID)
         await client.stop_notify(NOTIFICATION_UUID)
         # Send an "exit command to the consumer" 
-        #await queue.put((time.time(), None))
+        # await queue.put((time.time(), None))
 
 
 async def run_queue_consumer(queue: asyncio.Queue):
