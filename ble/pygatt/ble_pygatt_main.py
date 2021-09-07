@@ -39,6 +39,7 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.lineEdit.setPlaceholderText("需要监听的UUID-2")
         self.lineEdit_3.setPlaceholderText("需要连接的蓝牙MAC地址")
         self.lineEdit_4.setPlaceholderText("发送的内容，输入HEX") 
+        
 
         # 一些默认值
         self.adapter = None
@@ -170,7 +171,7 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     def disconnect(self):
-        self.textBrowser.insertPlainText("断开连接"+"\n\n")
+        self.textBrowser.insertPlainText("\n"+"断开连接"+"\n\n")
         self.statusBar.showMessage('点击了断开',5000)
         if(self.adapter != None):
             self.adapter.stop()
