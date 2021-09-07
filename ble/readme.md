@@ -11,6 +11,10 @@ sudo pip install bluepy
 ```
 # bleak
 [代码仓库](https://github.com/hbldh/bleak)
+安装
+```
+pip install bleak
+```
 
 # pygatt
 

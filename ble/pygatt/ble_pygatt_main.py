@@ -1,9 +1,8 @@
 # 窗体相关
 import sys
 from typing import Type
-import uuid
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMessageBox,QMainWindow
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QTimer,QRegExp,QThread, pyqtSignal
 from PyQt5.QtGui import QKeyEvent, QKeySequence, QRegExpValidator
 from ble_pygatt_ui import Ui_MainWindow
@@ -22,18 +21,31 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
     def init(self):
         global q
         global show
-        # show = self.textBrowser
         q = queue.Queue()
-        # self.loop = ble_show_loop()
         #定义
         self.loop = showLoop()
         # 线程自定义信号连接的槽函数
         self.loop.trigger.connect(self.display)
+        # UI变更
+        self.statusBar =  QStatusBar()
+        self.setStatusBar(self.statusBar)
 
+        self.setWindowTitle('自用的蓝牙工具')
+        self.setFixedSize(self.width(), self.height())
+        self.lineEdit_5.setPlaceholderText("发送通道UUID") 
+        self.lineEdit_2.setPlaceholderText("需要监听的UUID-1")
+        self.lineEdit.setPlaceholderText("需要监听的UUID-2")
+        self.lineEdit_3.setPlaceholderText("需要连接的蓝牙MAC地址")
+        self.lineEdit_4.setPlaceholderText("发送的内容，输入HEX") 
+
+        # 一些默认值
         self.adapter = None
         self.defaultMac = "54:B7:E5:79:F4:49"
         self.defaultUUID = "0000fff1-0000-1000-8000-00805f9b34fb"
         self.defaultUUID_2 = "0000f101-0000-1000-8000-00805f9b34fb"
+        self.defaultSendUUID = '0000f102-0000-1000-8000-00805f9b34fb'
+        self.defaultSendCmd = 'A401FF'
+
         #绑定按键    
         self.pushButton.clicked.connect(self.connect)
         self.pushButton_2.clicked.connect(self.disconnect)
@@ -58,9 +70,9 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.lineEdit_3.setText(self.defaultMac)
         self.lineEdit_2.setText(self.defaultUUID)
         self.lineEdit.setText(self.defaultUUID_2)
+        self.lineEdit_5.setText(self.defaultSendUUID)
+        self.lineEdit_4.setText(self.defaultSendCmd) 
 
-        self.lineEdit_5.setText('0000f102-0000-1000-8000-00805f9b34fb')
-        self.lineEdit_4.setText('A401FF') 
         # HEX
         reg3 = QRegExp("^[0-9A-Fa-f]+$")
         LE1Validator3 = QRegExpValidator(self)
@@ -74,6 +86,7 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.mac = self.lineEdit_3.text()
         self.uuid_1 = self.lineEdit_2.text()
         self.uuid_2 = self.lineEdit.text()
+        self.statusBar.showMessage('点击了连接',5000)
         #清除显示
         self.textBrowser.clear()
         self.adapter = pygatt.GATTToolBackend(search_window_size=2048)
@@ -89,6 +102,7 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         except:
             self.textBrowser.insertPlainText("连接失败"+"\n\n")
             self.disconnect()
+            return
         self.textBrowser.insertPlainText("连接成功"+"\n\n")
         #清空接收队列
         logger.info("clear queue")
@@ -122,21 +136,19 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         # logger.info(f"{test3}")
         # logger.info(f"bytearray1:{bytearray(sendStr,'utf-8')}")
         # logger.info(f"bytearray2:{bytearray([0XA4,0X01,0XFF])}")
-
-        self.device.char_write(sendUUID,bytearray(binascii.unhexlify(sendStr.encode("utf-8"))))
-        
-        self.textBrowser.insertPlainText("点击了发送"+"\n\n")
+  
+        #self.textBrowser.insertPlainText("点击了发送"+"\n\n")
+        self.statusBar.showMessage('点击了发送',5000)
         if(self.adapter == None):
             self.textBrowser.insertPlainText("未建立连接"+"\n\n")
             return
-
+        else:
+            self.device.char_write(sendUUID,bytearray(binascii.unhexlify(sendStr.encode("utf-8"))))
     # 将数据存入缓冲区
     def setTextBrowser(self,str):
         q.put(str)
         logger.info(f"queue input：{str}")
         logger.info(f"queue size{q.qsize()}")
-        #self.textBrowser.insertPlainText(str + "\n")
-        #self.textBrowser.moveCursor(win.textBrowser.textCursor().End)
 
     def dataCallback(self,handle,value): 
         str = "U1:" + format(value.hex())
@@ -148,12 +160,11 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
     def dataCallback2(self,handle,value):
         str = "U2:" + format(value.hex())
         self.setTextBrowser(str)
-        # _thread.start_new_thread(self.setTextBrowser,(str,) )
-        # self.textBrowser.insertPlainText("U2："+format(value.hex())+"\n")
-        # self.textBrowser.moveCursor(win.textBrowser.textCursor().End)
+
 
     def disconnect(self):
-        self.textBrowser.insertPlainText("点击了断开"+"\n\n")
+        self.textBrowser.insertPlainText("断开连接"+"\n\n")
+        self.statusBar.showMessage('点击了断开',5000)
         if(self.adapter != None):
             self.adapter.stop()
             self.adapter = None
