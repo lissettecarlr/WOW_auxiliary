@@ -11,16 +11,18 @@ import queue
 from loguru import logger
 import time
 import binascii
+import sys
 
 class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
     def __init__(self):
         super(ble_Tool, self).__init__()
         self.setupUi(self)
         self.init()
-
+        
     def init(self):
         global q
         global show
+
         q = queue.Queue()
         #定义
         self.loop = showLoop()
@@ -89,7 +91,12 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.statusBar.showMessage('点击了连接',5000)
         #清除显示
         self.textBrowser.clear()
-        self.adapter = pygatt.GATTToolBackend(search_window_size=2048)
+        if sys.platform.startswith('win'):
+            logger.info("win")
+            self.textBrowser.insertPlainText("该软件被运行在Windows上，如果点击连接没有反应，则大概率是适配器不支持，请切换到linux平台"+"\n\n")
+            self.adapter = pygatt.BGAPIBackend()
+        else:
+            self.adapter = pygatt.GATTToolBackend(search_window_size=2048)
         try:
             self.adapter.start()
             self.device = self.adapter.connect(self.mac)
