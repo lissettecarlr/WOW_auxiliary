@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>856</width>
-    <height>572</height>
+    <height>578</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,6 +118,15 @@
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>其他功能</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="action111"/>
+    <addaction name="action222"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="enabled">
@@ -130,6 +139,16 @@
     <string notr="true">color: rgb(85, 255, 255);</string>
    </property>
   </widget>
+  <action name="action111">
+   <property name="text">
+    <string>扫描</string>
+   </property>
+  </action>
+  <action name="action222">
+   <property name="text">
+    <string>发现服务</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

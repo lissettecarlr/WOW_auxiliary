@@ -21,8 +21,6 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         
     def init(self):
         global q
-        global show
-
         q = queue.Queue()
         #定义
         self.loop = showLoop()
@@ -53,6 +51,8 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         self.pushButton.clicked.connect(self.connect)
         self.pushButton_2.clicked.connect(self.disconnect)
         self.pushButton_3.clicked.connect(self.send)
+        self.action111.triggered.connect(self.scan)
+        self.action222.triggered.connect(self.findServer)
 
         #限制输入 MAC
         reg = QRegExp("([a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2}:[a-f0-9A-F]{2})")
@@ -66,7 +66,6 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         LE1Validator2.setRegExp(reg2)        
         self.lineEdit_2.setValidator(LE1Validator2)
         self.lineEdit.setValidator(LE1Validator2)
-
         self.lineEdit_5.setValidator(LE1Validator2)
 
         # 设置默认值
@@ -180,8 +179,50 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def closeEvent(self,event):
         self.loop.closeLoop()
-        sys.exit(app.exec_())        
+        sys.exit(app.exec_())     
 
+    def scan(self):
+        self.statusBar.showMessage('点击了扫描',5000)
+        #如果已有连接则需要断开
+        self.textBrowser.insertPlainText("\n"+"该功能有BUG，未开放"+"\n\n")
+        return # 这个库的扫描有BUG，暂时不用
+        if(self.adapter!=None):
+            self.disconnect()
+        try:    
+            if sys.platform.startswith('win'):
+                self.adapter = pygatt.BGAPIBackend()
+            else:
+                self.adapter = pygatt.GATTToolBackend(search_window_size=2048)        
+            self.adapter.start()
+            devices = self.adapter.scan()
+            for dev in devices:
+                self.textBrowser.insertPlainText("address:"+dev['address']+", name:"+dev['name']+"\n")
+            self.adapter.stop()
+        except:
+            self.textBrowser.insertPlainText("\n"+"扫描失败"+"\n\n")
+
+
+    def findServer(self):
+        self.statusBar.showMessage('点击了发现服务',5000)
+        # self.mac = self.lineEdit_3.text()
+        try:
+            # if(self.adapter==None):
+            #     self.adapter = pygatt.GATTToolBackend(search_window_size=2048)
+            #     self.adapter.start()
+            #     self.device = self.adapter.connect(self.mac)
+
+            for uuid in self.device.discover_characteristics().keys():
+                try:
+                    #print("Read UUID %s (handle %d)" %(uuid, self.device.get_handle(uuid) ))
+                    logger.info(f"UUID:{uuid},(handle {self.device.get_handle(uuid)})")
+                    self.setTextBrowser(f"UUID:{uuid},(handle {self.device.get_handle(uuid)})")
+                except:
+                    #print("Read UUID %s (handle %d): %s" %(uuid, self.device.get_handle(uuid), "!deny!"))    
+                    logger.info(f"UUID:{uuid},(handle {self.device.get_handle(uuid)}) deny")   
+                    self.setTextBrowser(f"UUID:{uuid},(handle {self.device.get_handle(uuid)}) deny")
+        except:
+            self.textBrowser.insertPlainText("发现服务失败,请先连接设备"+"\n\n")
+        
 
 # 用于UI显示的线程
 class showLoop(QThread):
