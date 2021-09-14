@@ -1,6 +1,7 @@
 # 简单使用说明
 首先此工具只能在linux上使用，使用前先安装python
-之后用pip安装pygatt和pyqt5,最后使用下命令打开软件
+之后用pip安装pygatt、loguru和pyqt5,然后进入simpletcp-master，执行python3 setup.py install
+最后使用下命令打开软件
 ```
 python3 ble_pygatt_main.py
 ```
@@ -25,3 +26,6 @@ python3 ble_pygatt_main.py
 A001FF
 ```
 点击发送，则通过此UUID对其传输
+
+* 新增加了连接服务器功能
+能够将UUID_1和UUID_2接收到的数据转发给服务器

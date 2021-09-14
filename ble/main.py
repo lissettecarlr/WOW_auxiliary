@@ -8,8 +8,6 @@ async def run():
     for d in devices:
         print(d)
 
-
-
 from bleak import BleakClient
 
 ADDRESS = (
@@ -29,10 +27,8 @@ async def print_services(mac_addr: str):
         for service in svcs:
             print(service)
 
-
 loop = asyncio.get_event_loop()
 loop.run_until_complete(print_services(ADDRESS))
-
 
 
 def main():

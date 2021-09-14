@@ -42,3 +42,5 @@ UUID示例
 mac地址示例
 "54:B7:E5:79:F4:49"
 
+pyuic5 -o ble_ui.py .\ble.ui
+
