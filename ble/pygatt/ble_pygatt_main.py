@@ -124,13 +124,12 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
             self.textBrowser.insertPlainText("该软件被运行在Windows上，如果点击连接没有反应，则大概率是适配器不支持，请切换到linux平台"+"\n\n")
             self.adapter = pygatt.BGAPIBackend()
         else:
-            self.adapter = pygatt.GATTToolBackend(search_window_size=2048)
+            self.adapter = pygatt.GATTToolBackend()
         try: 
             self.adapter.start()
             self.device = self.adapter.connect(self.mac)
             self.device.subscribe(self.uuid_1,
-                         callback=self.dataCallback, 
-                         indication=True)
+                         callback=self.dataCallback)
             self.device.subscribe(self.uuid_2,
                          callback=self.dataCallback2,
                          indication=True)        
@@ -185,7 +184,9 @@ class ble_Tool(QtWidgets.QMainWindow,Ui_MainWindow):
         logger.info(f"queue input：{str}")
         logger.info(f"queue size{q.qsize()}")
 
-    def dataCallback(self,handle,value): 
+    def dataCallback(self,handle,value):
+        # logger.info(f"d:{format(value.hex())}")
+    
         # TCP上行
         if(self.checkBox.isChecked() and self.tcpLoop.getStatus()):
             if(self.checkBox_3.isChecked()):
